@@ -1,0 +1,38 @@
+- name: Move all repo online to folder
+  command: {{ item }}
+  with_items:
+  - mkdir /etc/yum.repos.d/bk
+  - mv /etc/yum.repos.d/* /etc/yum.repos.d/bk
+- name: Create local yum repo file
+  copy:
+    dest: "/etc/yum.repos.d/local.repo"
+    content: |
+      [cent7_repo]
+      name=Cent7 Repo
+      baseurl=http://10.240.201.50:8081/repository/centos-7
+      enabled=1
+      gpgcheck=0
+      priority=10
+
+      [fedora_repo]
+      name=Fedora Repo
+      baseurl=http://10.240.201.50:8081/repository/fedora-epel/
+      enabled=1
+      gpgcheck=0
+      priority=20
+      EOF
+      cat << EOF > /etc/yum/pluginconf.d/priorities.conf 
+      [main]
+      enabled = 1
+      check_obsoletes = 0 
+- name: Create pip repo
+  command: {{ item }}
+  with_items:
+  - mkdir -p ~/.config/pip
+  - cat << EOF > ~/.config/pip/pip.conf
+  - [global]
+  - trusted-host = 10.240.201.50
+  - index = http://10.240.201.50:8081/repository/pypi
+  - index-url = http://10.240.201.50:8081/repository/pypi/simple
+  - extra-index-url = http://10.240.201.50:8081/repository/pypi/simple
+  - EOF

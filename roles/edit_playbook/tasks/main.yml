@@ -1,0 +1,14 @@
+- name: Disable docker.repo 
+  lineinfile:
+    path: ./ansible/roles/baremetal/defaults/main.yml 
+    regexp: '^enable_docker_repo:'
+    line: 'enable_docker_repo: false'
+- name: Disable docker_legacy_packages
+  lineinfile:
+    path: ./
+    regexp: '^docker_legacy_packages:'
+    line: 'docker_legacy_packages: false'
+
+
+
+

@@ -1,0 +1,2 @@
+[control]
+10.60.17.224 ansible_user=root ansible_password=Viettel@123 ansible_port=8922 become=true
