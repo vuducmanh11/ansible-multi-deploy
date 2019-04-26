@@ -1,3 +1,5 @@
+- name: Go to kolla-ansible directory
+  command: cd {{ kolla_ansible_dir }}
 - name: Disable docker.repo 
   lineinfile:
     path: ./ansible/roles/baremetal/defaults/main.yml 
@@ -5,9 +7,23 @@
     line: 'enable_docker_repo: false'
 - name: Disable docker_legacy_packages
   lineinfile:
-    path: ./
+    path: ./ansible/roles/baremetal/defaults/main.yml
     regexp: '^docker_legacy_packages:'
     line: 'docker_legacy_packages: false'
+- name: Remove install pip by easy install
+  blockinfile: 
+    path: ./ansible/roles/baremetal/tasks/install.yml
+    marker_begin: "- name: Install pip"
+    marker_end: "- name:"
+    content: |
+	package:
+	    name: "{{ item }}"
+	    state: present
+	    update_cache: yes
+	  become: True
+	  with_items:
+	    - python-pip
+
 
 
 
